@@ -1,0 +1,36 @@
+#!/bin/bash
+# nxtl - next launch previewer
+# credit to tim dodd aka the Everyday Astronaut for the launch previews :)
+
+startup() { mkdir $HOME/nxtl ; }
+
+extractFromPage() {
+   printf "Preparing for liftoff...\n"
+   curl -sS https://everydayastronaut.com/prelaunch-previews/ | awk '{if (NR == 320) print}' | tidy -q 2>/dev/null -c | grep 'td' | sed -ne 's/<[^>]*>//g;s/^ td.*//g;1,18p' | grep . >> $HOME/nxtl/raw-data.txt
+}
+
+preview() {
+   mapfile -t <<< "$(cat ~/nxtl/raw-data.txt)"
+   mission=$(printf "%s\n" "${MAPFILE[1]}")
+   locat=$(printf "%s\n" "${MAPFILE[3]}")
+   provid=$(printf "%s\n" "${MAPFILE[5]}")
+   rocket=$(printf "%s\n" "${MAPFILE[7]}")
+   winStart=$(printf "%s\n" "${MAPFILE[10]}")
+   winEnd=$(printf "%s\n" "${MAPFILE[12]}")
+   winDiff=$(datediff "$winStart" "$winEnd" -f "%mmo %dd %Hh %Mm")
+   countdown=$(datediff "$(date '+%Y-%m-%d %H:%M:%S %Z')" "2019-04-10 22:36:00 UTC" -f "%mmo %dd %Hh %Mm %Ss")
+
+   echo -e "Mission: $mission"
+   echo -e "Location: $locat"
+   echo -e "Launch Provider: $provid"
+   echo -e "Rocket: $rocket"
+   echo -e "Window: $winStart - $winEnd ($winDiff)"
+   echo -e "Countdown Timer: $countdown"
+}
+
+garbage() { rm -r $HOME/nxtl ; }
+
+startup
+extractFromPage
+preview
+garbage
