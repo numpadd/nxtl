@@ -20,12 +20,12 @@ preview() {
    winDiff=$(datediff "$winStart" "$winEnd" -f "%mmo %dd %Hh %Mm")
    countdown=$(datediff "$(date '+%Y-%m-%d %H:%M:%S %Z')" "2019-04-10 22:36:00 UTC" -f "%mmo %dd %Hh %Mm %Ss")
 
-   echo -e "Mission: $mission"
-   echo -e "Location: $locat"
-   echo -e "Launch Provider: $provid"
-   echo -e "Rocket: $rocket"
-   echo -e "Window: $winStart - $winEnd ($winDiff)"
-   echo -e "Countdown Timer: $countdown"
+   echo -e "\e[34mMission: \e[0m$mission"
+   echo -e "\e[34mLocation: \e[0m$locat"
+   echo -e "\e[34mLaunch Provider: \e[0m$provid"
+   echo -e "\e[34mRocket: \e[0m$rocket"
+   echo -e "\e[34mWindow: \e[0m$winStart - $winEnd ($winDiff)"
+   echo -e "\e[34mCountdown Timer: \e[0m$countdown"
 }
 
 garbage() { rm -r $HOME/nxtl ; }
